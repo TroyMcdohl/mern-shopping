@@ -128,6 +128,7 @@ const ProductDetail = (props) => {
                         width: "100%",
                         display: "flex",
                         justifyContent: "center",
+                        margin: "5px",
                         alignItems: "center",
                       }}
                       className="p_detail_box_des_container_para"
