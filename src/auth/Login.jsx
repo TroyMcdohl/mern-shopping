@@ -50,6 +50,7 @@ const Login = () => {
         }, 2000);
 
         localStorage.setItem("current_user", JSON.stringify(resData));
+        navigate(0);
       }
     } catch (err) {}
   };
