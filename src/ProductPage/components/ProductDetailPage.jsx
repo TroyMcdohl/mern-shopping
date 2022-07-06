@@ -113,22 +113,29 @@ const ProductDetail = (props) => {
                       border: "none",
                       padding: "5px",
                       backgroundColor: "blue",
+                      color: "white",
+                      cursor: "pointer",
+                      borderRadius: "10%",
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
                     }}
                     className="p_detail_box_des_container_para"
                     onClick={async () => {
                       const res = await fetch(
-                        `https://mern-shopping-api.herokuapp.com/api/v1/products/${props.id}/cart`,
+                        `https://mern-shopping-api.herokuapp.com/api/v1/products/${props.product.product.id}/cart`,
                         {
                           method: "POST",
                           credentials: "include",
                           headers: { "Content-type": "application/json" },
                           body: JSON.stringify({
-                            productId: props.id,
-                            productName: props.name,
-                            productImg: props.images[0],
-                            productPrice: props.price,
-                            quantity: props.quantity,
-                            total: props.price,
+                            productId: props.product.product.id,
+                            productName: props.product.product.name,
+                            productImg: props.product.product.images[0],
+                            productPrice: props.product.product.price,
+                            quantity: props.product.product.quantity,
+                            total: props.product.product.price,
                           }),
                         }
                       );
