@@ -48,9 +48,6 @@ const Login = () => {
         setTimeout(() => {
           setSuccess(false);
         }, 2000);
-
-        localStorage.setItem("current_user", JSON.stringify(resData));
-        navigate(0);
       }
     } catch (err) {}
   };
