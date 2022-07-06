@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import "./productDetailPage.css";
 import StarRateIcon from "@mui/icons-material/StarRate";
@@ -7,6 +7,8 @@ import "swiper/css";
 import useFetchGet from "../../hooks/useFetchGet";
 import { useParams, useNavigate } from "react-router-dom";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import { NavContext } from "../../context/NavContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const ProductDetail = (props) => {
   const [drawerAdditional, setDrawerAdditional] = useState(false);
@@ -18,6 +20,12 @@ const ProductDetail = (props) => {
   const [errMsgReview, setErrMsgReview] = useState();
   const [errReview, setErrReview] = useState(false);
   const [avgReview, setAvgReview] = useState();
+
+  const currentUser = useContext(AuthContext).current_user;
+
+  const navigate = useNavigate();
+
+  const other = useContext(NavContext).toggleHandler;
 
   const location = useLocation();
   const pid = useParams().pid;
@@ -108,48 +116,70 @@ const ProductDetail = (props) => {
                     {props.product.product.des}
                   </p>
 
-                  <button
-                    style={{
-                      border: "none",
-                      padding: "5px",
-                      backgroundColor: "blue",
-                      color: "white",
-                      cursor: "pointer",
-                      borderRadius: "10%",
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                    className="p_detail_box_des_container_para"
-                    onClick={async () => {
-                      const res = await fetch(
-                        `https://mern-shopping-api.herokuapp.com/api/v1/products/${props.product.product.id}/cart`,
-                        {
-                          method: "POST",
-                          credentials: "include",
-                          headers: { "Content-type": "application/json" },
-                          body: JSON.stringify({
-                            productId: props.product.product.id,
-                            productName: props.product.product.name,
-                            productImg: props.product.product.images[0],
-                            productPrice: props.product.product.price,
-                            quantity: props.product.product.quantity,
-                            total: props.product.product.price,
-                          }),
+                  {currentUser ? (
+                    <button
+                      style={{
+                        border: "none",
+                        padding: "5px",
+                        backgroundColor: "blue",
+                        color: "white",
+                        cursor: "pointer",
+                        borderRadius: "10%",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                      className="p_detail_box_des_container_para"
+                      onClick={async () => {
+                        const res = await fetch(
+                          `https://mern-shopping-api.herokuapp.com/api/v1/products/${props.product.product.id}/cart`,
+                          {
+                            method: "POST",
+                            credentials: "include",
+                            headers: { "Content-type": "application/json" },
+                            body: JSON.stringify({
+                              productId: props.product.product.id,
+                              productName: props.product.product.name,
+                              productImg: props.product.product.images[0],
+                              productPrice: props.product.product.price,
+                              quantity: props.product.product.quantity,
+                              total: props.product.product.price,
+                            }),
+                          }
+                        );
+
+                        const resData = await res.json();
+
+                        if (res.ok) {
+                          other((prev) => !prev);
                         }
-                      );
-
-                      const resData = await res.json();
-
-                      if (res.ok) {
-                      }
-                      if (!res.ok) {
-                      }
-                    }}
-                  >
-                    Add To Cart
-                  </button>
+                        if (!res.ok) {
+                        }
+                      }}
+                    >
+                      Add To Cart
+                    </button>
+                  ) : (
+                    <button
+                      style={{
+                        border: "none",
+                        padding: "5px",
+                        backgroundColor: "blue",
+                        color: "white",
+                        cursor: "pointer",
+                        borderRadius: "10%",
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                      className="p_detail_box_des_container_para"
+                      onClick={() => navigate("/login")}
+                    >
+                      Add To Cart
+                    </button>
+                  )}
 
                   <div className="p_detail_box_des_container_drawer_box">
                     {drawerAdditional ? (
