@@ -9,7 +9,7 @@ const UserProfile = () => {
         "https://mern-shopping-api.herokuapp.com/api/v1/users/logout",
         {
           method: "PATCH",
-
+          credentials: "include",
           headers: { "Content-type": "application/json" },
         }
       );
