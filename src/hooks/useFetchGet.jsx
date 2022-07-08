@@ -40,7 +40,7 @@ const useFetchGet = (url, ...change) => {
       }
     };
     fetchData();
-  }, [url, ...change]);
+  }, [url, change]);
 
   return { data, loading, error, errMsg, success };
 };
