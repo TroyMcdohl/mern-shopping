@@ -426,41 +426,50 @@ const ProductDetail = (props) => {
                           ref={reviewRef}
                         />
                       </div>
-                      <button
-                        className="review_btn"
-                        onClick={async () => {
-                          const res = await fetch(
-                            `https://mern-shopping-api.herokuapp.com/api/v1/products/${props.product.product._id}/review/`,
-                            {
-                              method: "POST",
-                              credentials: "include",
-                              headers: { "Content-type": "application/json" },
-                              body: JSON.stringify({
-                                rating: ratingRef.current.value,
-                                review: reviewRef.current.value,
-                              }),
+                      {currentUser ? (
+                        <button
+                          className="review_btn"
+                          onClick={async () => {
+                            const res = await fetch(
+                              `https://mern-shopping-api.herokuapp.com/api/v1/products/${props.product.product._id}/review/`,
+                              {
+                                method: "POST",
+                                credentials: "include",
+                                headers: { "Content-type": "application/json" },
+                                body: JSON.stringify({
+                                  rating: ratingRef.current.value,
+                                  review: reviewRef.current.value,
+                                }),
+                              }
+                            );
+
+                            const resData = await res.json();
+
+                            if (!res.ok) {
+                              setErrMsgReview(resData.message);
+                              setErrReview(true);
+                              setTimeout(() => {
+                                setErrReview(false);
+                              }, 3000);
                             }
-                          );
+                            if (res.ok) {
+                              setReviewSuccess((prev) => !prev);
+                            }
 
-                          const resData = await res.json();
-
-                          if (!res.ok) {
-                            setErrMsgReview(resData.message);
-                            setErrReview(true);
-                            setTimeout(() => {
-                              setErrReview(false);
-                            }, 3000);
-                          }
-                          if (res.ok) {
-                            setReviewSuccess((prev) => !prev);
-                          }
-
-                          ratingRef.current.value = 1;
-                          reviewRef.current.value = "";
-                        }}
-                      >
-                        Submit
-                      </button>
+                            ratingRef.current.value = 1;
+                            reviewRef.current.value = "";
+                          }}
+                        >
+                          Submit
+                        </button>
+                      ) : (
+                        <button
+                          className="review_btn"
+                          onClick={() => navigate("/login")}
+                        >
+                          Submit
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
