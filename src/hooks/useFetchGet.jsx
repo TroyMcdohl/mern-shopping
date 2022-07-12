@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 
-const useFetchGet = (url, change) => {
+const useFetchGet = (url, change, anotherChange) => {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -40,7 +40,7 @@ const useFetchGet = (url, change) => {
       }
     };
     fetchData();
-  }, [url, change]);
+  }, [url, change, anotherChange]);
 
   return { data, loading, error, errMsg, success };
 };
