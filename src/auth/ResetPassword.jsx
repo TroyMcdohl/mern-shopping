@@ -18,7 +18,7 @@ const ResetPassword = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        `https://mern-shopping-api.herokuapp.com/api/v1/users/resetpassword/${token}`,
+        `http://localhost:8000/api/v1/users/resetpassword/${token}`,
         {
           method: "PATCH",
           credentials: "include",

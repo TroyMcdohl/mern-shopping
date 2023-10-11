@@ -12,7 +12,34 @@
   height: 90%;
   width: 100%;
   display: flex;
-  transition: all 2s ease;
+  transition: 0.5s ease;
+  opacity: 0;
+}
+
+.home_top_wrapper.active {
+  opacity: 1;
+}
+
+.home_top_dots {
+  left: 50%;
+  bottom: 50px;
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  width: 50px;
+  align-items: center;
+}
+
+.home_top_dot {
+  cursor: pointer;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.home_top_dot.active {
+  background-color: blue;
 }
 
 .home_top_left_arrow {
@@ -49,11 +76,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: clickslide 20s ease;
   background-color: antiquewhite;
 }
 
-@keyframes clickslide {
+/* @keyframes clickslide {
   0% {
     transform: translateX(0%);
   }
@@ -69,7 +95,7 @@
   100% {
     transform: translateX(0%);
   }
-}
+} */
 
 .home_top_img_box {
   height: 100%;

@@ -5,14 +5,11 @@ const UserProfile = () => {
   const navigate = useNavigate();
   const clickHandler = async () => {
     try {
-      const res = await fetch(
-        "https://mern-shopping-api.herokuapp.com/api/v1/users/logout",
-        {
-          method: "PATCH",
-          credentials: "include",
-          headers: { "Content-type": "application/json" },
-        }
-      );
+      const res = await fetch("http://localhost:8000/api/v1/users/logout", {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-type": "application/json" },
+      });
 
       const resData = await res.json();
 

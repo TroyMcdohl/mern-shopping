@@ -17,18 +17,15 @@ const Login = () => {
   const clickHandler = async () => {
     try {
       setLoading(true);
-      const res = await fetch(
-        "https://mern-shopping-api.herokuapp.com/api/v1/users/login",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:8000/api/v1/users/login", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
 
       const resData = await res.json();
 
@@ -60,6 +57,7 @@ const Login = () => {
       <ErrorLoadingShow
         loading={loading}
         error={error}
+        loadingMsg="Logging in Please Wait..."
         success={success}
         errMsg={errMsg}
       />

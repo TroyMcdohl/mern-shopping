@@ -25,14 +25,11 @@ const Admin = () => {
       form.append("images", fileupload[i]);
     }
 
-    const res = await fetch(
-      "https://mern-shopping-api.herokuapp.com/api/v1/products",
-      {
-        method: "POST",
-        credentials: "include",
-        body: form,
-      }
-    );
+    const res = await fetch("http://localhost:8000/api/v1/products", {
+      method: "POST",
+      credentials: "include",
+      body: form,
+    });
 
     console.log(await res.json());
   };

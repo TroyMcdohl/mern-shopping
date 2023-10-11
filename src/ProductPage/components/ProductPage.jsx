@@ -8,7 +8,7 @@ const ProductPage = (props) => {
   const location = useLocation();
 
   const { data, loading, error, errMsg, success } = useFetchGet(
-    `https://mern-shopping-api.herokuapp.com/api/v1/products`
+    `http://localhost:8000/api/v1/products`
   );
 
   useEffect(() => {
@@ -117,6 +117,7 @@ const ProductPage = (props) => {
                   name={p.name}
                   color={p.color}
                   size={p.size}
+                  tagName={p.tagname}
                 />
               ))}
           </div>

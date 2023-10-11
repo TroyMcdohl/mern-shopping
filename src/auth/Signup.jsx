@@ -16,7 +16,7 @@ const Signup = () => {
       password: password,
       confirmPassword: confirmPassword,
     }),
-    "https://mern-shopping-api.herokuapp.com/api/v1/users/signup",
+    "http://localhost:8000/api/v1/users/signup",
     "POST",
     "/login"
   );

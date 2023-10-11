@@ -4,13 +4,14 @@ import useFetchGet from "../../hooks/useFetchGet";
 import { NavContext } from "../../context/NavContext";
 import StripeCheckout from "react-stripe-checkout";
 import { useNavigate } from "react-router-dom";
+import ProductCartItemPage from "./ProductCartItemPage";
 
 const ProductCartPage = () => {
   const navigate = useNavigate();
   const [cartChange, setCartChange] = useState(false);
 
   const { data, loading, error, errMsg, success } = useFetchGet(
-    "https://mern-shopping-api.herokuapp.com/api/v1/carts",
+    "http://localhost:8000/api/v1/carts",
     cartChange
   );
 
@@ -22,23 +23,20 @@ const ProductCartPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        "https://mern-shopping-api.herokuapp.com/api/v1/checkout/payment",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({
-            tokenId: stripeToken.id,
-            amount:
-              data.carts
-                .map((c) => c.total)
-                .reduce(function (accumulator, currentValue) {
-                  return accumulator + currentValue;
-                }, 0) * 100,
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:8000/api/v1/checkout/payment", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          tokenId: stripeToken.id,
+          amount:
+            data.carts
+              .map((c) => c.total)
+              .reduce(function (accumulator, currentValue) {
+                return accumulator + currentValue;
+              }, 0) * 100,
+        }),
+      });
 
       const resData = await res.json();
 
@@ -76,155 +74,162 @@ const ProductCartPage = () => {
                 No carts Found
               </div>
             )}
-            <tr className="productcart_item" style={{ border: "none" }}>
-              <th></th>
-              <th>Product</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Total</th>
-              <th></th>
-              <th></th>
-            </tr>
 
-            {data &&
-              data.carts.map((c) => (
-                <ProductCartItemPage
-                  key={c._id}
-                  productImg={c.productImg}
-                  productName={c.productName}
-                  productPrice={c.productPrice}
-                  id={c._id}
-                  quantity={c.quantity}
-                  total={c.total}
-                  setCartChange={setCartChange}
-                />
-              ))}
+            {data && data.carts.length != 0 && (
+              <>
+                <tr className="productcart_item" style={{ border: "none" }}>
+                  <th></th>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+
+                {data &&
+                  data.carts.map((c) => (
+                    <ProductCartItemPage
+                      key={c._id}
+                      productImg={c.productImg}
+                      productName={c.productName}
+                      productPrice={c.productPrice}
+                      id={c._id}
+                      quantity={c.quantity}
+                      total={c.total}
+                      setCartChange={setCartChange}
+                    />
+                  ))}
+              </>
+            )}
           </tbody>
         </table>
       </div>
-      <div className="productcart_payment">
-        <div className="productcart_total_box">
-          <h5 className="productcart_total_title">Total -</h5>
-          <p className="productcart_total_price">
-            $
-            {data &&
-              data.carts
-                .map((c) => c.total)
-                .reduce(function (accumulator, currentValue) {
-                  return accumulator + currentValue;
-                }, 0)}
-          </p>
+      {data && data.carts.length != 0 && (
+        <div className="productcart_payment">
+          <div className="productcart_total_box">
+            <h5 className="productcart_total_title">Total -</h5>
+            <p className="productcart_total_price">
+              $
+              {data &&
+                data.carts
+                  .map((c) => c.total)
+                  .reduce(function (accumulator, currentValue) {
+                    return accumulator + currentValue;
+                  }, 0)}
+            </p>
+          </div>
+          <div className="productcart_total_btn_box">
+            <StripeCheckout
+              name="Mern Shopping"
+              billingAddress
+              shippingAddress
+              amount={
+                data &&
+                data.carts
+                  .map((c) => c.total)
+                  .reduce(function (accumulator, currentValue) {
+                    return accumulator + currentValue;
+                  }, 0) * 100
+              }
+              token={onToken}
+              stripeKey="pk_test_51LE8tVAZh3YUC37Z95ucw8TE0SGkVPaXfqD0ix8BAldHdOVBH8WuchPE5zNqiD4oEXdlOQhqKT7STiA8mMFypmWm00ozPk8cxt"
+            >
+              <button className="productcart_total_btn">Order</button>
+            </StripeCheckout>
+          </div>
         </div>
-        <div className="productcart_total_btn_box">
-          <StripeCheckout
-            name="Mern Shopping"
-            billingAddress
-            shippingAddress
-            amount={
-              data &&
-              data.carts
-                .map((c) => c.total)
-                .reduce(function (accumulator, currentValue) {
-                  return accumulator + currentValue;
-                }, 0) * 100
-            }
-            token={onToken}
-            stripeKey="pk_test_51LE8tVAZh3YUC37Z95ucw8TE0SGkVPaXfqD0ix8BAldHdOVBH8WuchPE5zNqiD4oEXdlOQhqKT7STiA8mMFypmWm00ozPk8cxt"
-          >
-            <button className="productcart_total_btn">Order</button>
-          </StripeCheckout>
-        </div>
-      </div>
+      )}
     </div>
   );
 };
 
-const ProductCartItemPage = (props) => {
-  const [removeLoading, setRemoveLoading] = useState(false);
-  const other = useContext(NavContext).toggleHandler;
+// const ProductCartItemPage = (props) => {
+//   const [removeLoading, setRemoveLoading] = useState(false);
+//   const other = useContext(NavContext).toggleHandler;
 
-  const [quantity, setQuantity] = useState(props.quantity);
+//   const [quantity, setQuantity] = useState(props.quantity);
 
-  return (
-    <tr className="productcart_item" style={{ height: "15vh" }}>
-      <td className="productcart_data">
-        <img
-          src={`https://mern-shopping-api.herokuapp.com/${props.productImg}`}
-          alt=""
-          className="productcart_item_img"
-        />
-      </td>
-      <td>{props.productName}</td>
-      <td>${props.productPrice}</td>
+//   return (
+//     <tr className="productcart_item" style={{ height: "15vh" }}>
+//       <td className="productcart_data">
+//         <img
+//           src={`http://localhost:8000/${props.productImg}`}
+//           alt=""
+//           className="productcart_item_img"
+//         />
+//       </td>
+//       <td>{props.productName}</td>
+//       <td>${props.productPrice}</td>
 
-      <td>
-        <button
-          className="p_detail_box_des_container_cart_minus"
-          onClick={() => setQuantity(quantity === 1 ? 1 : quantity - 1)}
-        >
-          -
-        </button>
-        <h5 className="cart_quantity">{quantity}</h5>
-        <button
-          className="p_detail_box_des_container_cart_plus"
-          onClick={() => setQuantity(quantity + 1)}
-        >
-          +
-        </button>
-      </td>
-      <td>${props.total}</td>
-      <td>
-        <button
-          className="table_btn_update"
-          onClick={async () => {
-            const res = await fetch(
-              `https://mern-shopping-api.herokuapp.com/api/v1/carts/${props.id}`,
-              {
-                method: "PATCH",
-                credentials: "include",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify({
-                  total: `${props.productPrice}` * `${quantity}`,
-                  quantity: quantity,
-                }),
-              }
-            );
-            if (res.ok) {
-              props.setCartChange((prev) => !prev);
-            }
-          }}
-        >
-          Update
-        </button>
-      </td>
-      <td>
-        <button
-          className="table_btn"
-          style={{ cursor: removeLoading && "wait" }}
-          onClick={async () => {
-            setRemoveLoading(true);
-            const res = await fetch(
-              `https://mern-shopping-api.herokuapp.com/api/v1/carts/${props.id}`,
-              {
-                method: "DELETE",
-                credentials: "include",
-              }
-            );
-            if (res.ok) {
-              props.setCartChange((prev) => !prev);
-              other((prev) => !prev);
-              setRemoveLoading(false);
-            }
-            if (!res.ok) {
-              setRemoveLoading(false);
-            }
-          }}
-        >
-          Remove
-        </button>
-      </td>
-    </tr>
-  );
-};
+//       <td>
+//         <button
+//           className="p_detail_box_des_container_cart_minus"
+//           onClick={() => setQuantity(quantity === 1 ? 1 : quantity - 1)}
+//         >
+//           -
+//         </button>
+//         <h5 className="cart_quantity">{quantity}</h5>
+//         <button
+//           className="p_detail_box_des_container_cart_plus"
+//           onClick={() => setQuantity(quantity + 1)}
+//         >
+//           +
+//         </button>
+//       </td>
+//       <td>${props.total}</td>
+//       <td>
+//         <button
+//           className="table_btn_update"
+//           onClick={async () => {
+//             const res = await fetch(
+//               `http://localhost:8000/api/v1/carts/${props.id}`,
+//               {
+//                 method: "PATCH",
+//                 credentials: "include",
+//                 headers: { "Content-type": "application/json" },
+//                 body: JSON.stringify({
+//                   total: `${props.productPrice}` * `${quantity}`,
+//                   quantity: quantity,
+//                 }),
+//               }
+//             );
+//             if (res.ok) {
+//               props.setCartChange((prev) => !prev);
+//             }
+//           }}
+//         >
+//           Update
+//         </button>
+//       </td>
+//       <td>
+//         <button
+//           className="table_btn"
+//           style={{ cursor: removeLoading && "wait" }}
+//           onClick={async () => {
+//             setRemoveLoading(true);
+//             const res = await fetch(
+//               `http://localhost:8000/api/v1/carts/${props.id}`,
+//               {
+//                 method: "DELETE",
+//                 credentials: "include",
+//               }
+//             );
+//             if (res.ok) {
+//               props.setCartChange((prev) => !prev);
+//               other((prev) => !prev);
+//               setRemoveLoading(false);
+//             }
+//             if (!res.ok) {
+//               setRemoveLoading(false);
+//             }
+//           }}
+//         >
+//           Remove
+//         </button>
+//       </td>
+//     </tr>
+//   );
+// };
 
 export default ProductCartPage;

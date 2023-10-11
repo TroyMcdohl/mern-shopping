@@ -17,7 +17,7 @@ const PasswordForgot = () => {
     try {
       setLoading(true);
       const res = await fetch(
-        "https://mern-shopping-api.herokuapp.com/api/v1/users/forgotpassword",
+        "http://localhost:8000/api/v1/users/forgotpassword",
         {
           method: "POST",
           credentials: "include",

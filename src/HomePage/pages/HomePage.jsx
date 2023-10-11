@@ -7,7 +7,7 @@ import useFetchGet from "../../hooks/useFetchGet";
 
 const HomePage = () => {
   const { data, loading, error, errMsg, success } = useFetchGet(
-    "https://mern-shopping-api.herokuapp.com/api/v1/products"
+    "http://localhost:8000/api/v1/products"
   );
 
   return (

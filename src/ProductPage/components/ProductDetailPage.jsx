@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import "./productDetailPage.css";
+
 import StarRateIcon from "@mui/icons-material/StarRate";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -20,6 +21,10 @@ const ProductDetail = (props) => {
   const [errMsgReview, setErrMsgReview] = useState();
   const [errReview, setErrReview] = useState(false);
   const [avgReview, setAvgReview] = useState();
+  const [cartLoading, setCartLoading] = useState(false);
+  const [cartSuccess, setCartSuccess] = useState(false);
+  const [cartErr, setCartErr] = useState(false);
+  const [cartErrData, setCartErrData] = useState();
 
   const currentUser = useContext(AuthContext).current_user;
 
@@ -37,7 +42,7 @@ const ProductDetail = (props) => {
   const reviewRef = useRef();
 
   const { data, loading, error, errMsg, success } = useFetchGet(
-    `https://mern-shopping-api.herokuapp.com/api/v1/products/${pid}/review`,
+    `http://localhost:8000/api/v1/products/${pid}/review`,
     reviewSuccess,
     reviewDelSuccess
   );
@@ -45,7 +50,7 @@ const ProductDetail = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(
-        `https://mern-shopping-api.herokuapp.com/api/v1/reviews/productavg`,
+        `http://localhost:8000/api/v1/reviews/productavg`,
         {
           credentials: "include",
         }
@@ -60,6 +65,45 @@ const ProductDetail = (props) => {
     };
     fetchData();
   }, [reviewSuccess, reviewDelSuccess, pid]);
+
+  const addToCartHandler = async () => {
+    setCartLoading(true);
+    const res = await fetch(
+      `http://localhost:8000/api/v1/products/${props.product.product.id}/cart`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          productId: props.product.product._id,
+          productName: props.product.product.name,
+          productImg: props.product.product.images[0],
+          productPrice: props.product.product.price,
+          quantity: props.product.product.quantity,
+          total: props.product.product.price,
+        }),
+      }
+    );
+
+    const resData = await res.json();
+
+    if (res.ok) {
+      other((prev) => !prev);
+      setCartLoading(false);
+      setCartSuccess(true);
+      setTimeout(() => {
+        setCartSuccess(false);
+      }, 2000);
+    }
+    if (!res.ok) {
+      setCartLoading(false);
+      setCartErr(true);
+      setTimeout(() => {
+        setCartErr(false);
+      }, 2000);
+      setCartErrData(resData.message);
+    }
+  };
 
   return (
     <>
@@ -76,6 +120,23 @@ const ProductDetail = (props) => {
               </div>
             </div>
             <div className="p_detail_box">
+              {cartSuccess && (
+                <div className="add_to_cart_success_box">
+                  <div className="add_to_cart_success">
+                    Add to Cart Successfully
+                  </div>
+                </div>
+              )}
+              {cartErr && (
+                <div className="add_to_cart_success_box">
+                  <div
+                    className="add_to_cart_success"
+                    style={{ backgroundColor: "red" }}
+                  >
+                    {cartErrData}
+                  </div>
+                </div>
+              )}
               <div className="p_detail_box_left">
                 <div className="p_detail_box_img_container">
                   <div className="p_detail_box_img_container_top">
@@ -83,7 +144,7 @@ const ProductDetail = (props) => {
                       src={
                         changeImg
                           ? changeImg
-                          : `https://mern-shopping-api.herokuapp.com/${props.product.product.images[0]}`
+                          : `http://localhost:8000/${props.product.product.images[0]}`
                       }
                       alt=""
                       className="p_deatil_box_img_container_top_img"
@@ -92,7 +153,7 @@ const ProductDetail = (props) => {
                   <div className="p_detail_box_img_container_bot">
                     {props.product.product.images.map((pimg) => (
                       <img
-                        src={`https://mern-shopping-api.herokuapp.com/${pimg}`}
+                        src={`http://localhost:8000/${pimg}`}
                         alt=""
                         className="p_detail_box_img_container_bot_img"
                         onClick={(e) => {
@@ -132,32 +193,7 @@ const ProductDetail = (props) => {
                         alignItems: "center",
                       }}
                       className="p_detail_box_des_container_para"
-                      onClick={async () => {
-                        const res = await fetch(
-                          `https://mern-shopping-api.herokuapp.com/api/v1/products/${props.product.product.id}/cart`,
-                          {
-                            method: "POST",
-                            credentials: "include",
-                            headers: { "Content-type": "application/json" },
-                            body: JSON.stringify({
-                              productId: props.product.product.id,
-                              productName: props.product.product.name,
-                              productImg: props.product.product.images[0],
-                              productPrice: props.product.product.price,
-                              quantity: props.product.product.quantity,
-                              total: props.product.product.price,
-                            }),
-                          }
-                        );
-
-                        const resData = await res.json();
-
-                        if (res.ok) {
-                          other((prev) => !prev);
-                        }
-                        if (!res.ok) {
-                        }
-                      }}
+                      onClick={addToCartHandler}
                     >
                       Add To Cart
                     </button>
@@ -169,7 +205,7 @@ const ProductDetail = (props) => {
                         backgroundColor: "blue",
                         color: "white",
                         cursor: "pointer",
-                        borderRadius: "10%",
+                        borderRadius: "10px",
                         width: "100%",
                         display: "flex",
                         justifyContent: "center",
@@ -298,7 +334,7 @@ const ProductDetail = (props) => {
                                         }}
                                         onClick={async () => {
                                           const res = await fetch(
-                                            `https://mern-shopping-api.herokuapp.com/api/v1/reviews/${data.onereview[0]._id}`,
+                                            `http://localhost:8000/api/v1/reviews/${data.onereview[0]._id}`,
                                             {
                                               method: "DELETE",
                                               credentials: "include",
@@ -320,7 +356,7 @@ const ProductDetail = (props) => {
                                     )}
                                   <div className="one_review_top">
                                     <img
-                                      src={`https://mern-shopping-api.herokuapp.com/${r.user.photo}`}
+                                      src={`http://localhost:8000/${r.user.photo}`}
                                       alt=""
                                       className="one_review_img"
                                     />
@@ -424,6 +460,7 @@ const ProductDetail = (props) => {
                           type="text"
                           className="review_form_input"
                           ref={reviewRef}
+                          placeholder="text your though here"
                         />
                       </div>
                       {currentUser ? (
@@ -431,7 +468,7 @@ const ProductDetail = (props) => {
                           className="review_btn"
                           onClick={async () => {
                             const res = await fetch(
-                              `https://mern-shopping-api.herokuapp.com/api/v1/products/${props.product.product._id}/review/`,
+                              `http://localhost:8000/api/v1/products/${props.product.product._id}/review/`,
                               {
                                 method: "POST",
                                 credentials: "include",

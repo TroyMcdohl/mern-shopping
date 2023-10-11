@@ -8,7 +8,7 @@ const ProductDetail = () => {
   const pid = useParams().pid;
 
   const { data, loading, error, errMsg, success } = useFetchGet(
-    `https://mern-shopping-api.herokuapp.com/api/v1/products/${pid}`
+    `http://localhost:8000/api/v1/products/${pid}`
   );
 
   return (

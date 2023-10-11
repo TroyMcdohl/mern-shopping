@@ -12,7 +12,7 @@ const Navbar = () => {
   const navNumber = useContext(NavContext).toggle;
 
   const { data, loading, error, errMsg, success } = useFetchGet(
-    "https://mern-shopping-api.herokuapp.com/api/v1/carts",
+    "http://localhost:8000/api/v1/carts",
     navNumber
   );
 
@@ -76,7 +76,7 @@ const Navbar = () => {
                     to="/userprofile"
                   >
                     <img
-                      src={`https://mern-shopping-api.herokuapp.com/${currentUser.otherDetail.photo}`}
+                      src={`http://localhost:8000/${currentUser.otherDetail.photo}`}
                       alt=""
                       className="nav_right_profile_photo"
                     />
@@ -90,7 +90,7 @@ const Navbar = () => {
                     to="/userpanel"
                   >
                     <img
-                      src={`https://mern-shopping-api.herokuapp.com/${currentUser.otherDetail.photo}`}
+                      src={`http://localhost:8000/${currentUser.otherDetail.photo}`}
                       alt=""
                       className="nav_right_profile_photo_responsive"
                     />

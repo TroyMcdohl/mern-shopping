@@ -11,18 +11,15 @@ const Pay = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch(
-        "https://mern-shopping-api.herokuapp.com/api/v1/checkout/payment",
-        {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify({
-            tokenId: stripeToken.id,
-            amount: 2000,
-          }),
-        }
-      );
+      const res = await fetch("http://localhost:8000/api/v1/checkout/payment", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          tokenId: stripeToken.id,
+          amount: 2000,
+        }),
+      });
       if (!res.ok) {
         console.log(await res.json());
       }

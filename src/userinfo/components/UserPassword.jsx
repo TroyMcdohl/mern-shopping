@@ -14,7 +14,7 @@ const UserPassword = () => {
       newPassword: newPwd,
       confirmPassword: confirmPwd,
     }),
-    "https://mern-shopping-api.herokuapp.com/api/v1/users/updatepassword",
+    "http://localhost:8000/api/v1/users/updatepassword",
     "PATCH"
   );
 

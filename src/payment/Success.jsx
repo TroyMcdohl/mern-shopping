@@ -15,28 +15,25 @@ const Success = () => {
   useEffect(() => {
     const createOrder = async () => {
       try {
-        const res = await fetch(
-          "https://mern-shopping-api.herokuapp.com/api/v1/orders",
-          {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify({
-              products: cart.map((c) => ({
-                productId: c.productId,
-                quantity: c.quantity,
-                productImg: c.productImg,
-                productName: c.productName,
-              })),
-              total: cart
-                .map((c) => c.total)
-                .reduce(function (accumulator, currentValue) {
-                  return accumulator + currentValue;
-                }, 0),
-              address: data.billing_details.address,
-            }),
-          }
-        );
+        const res = await fetch("http://localhost:8000/api/v1/orders", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify({
+            products: cart.map((c) => ({
+              productId: c.productId,
+              quantity: c.quantity,
+              productImg: c.productImg,
+              productName: c.productName,
+            })),
+            total: cart
+              .map((c) => c.total)
+              .reduce(function (accumulator, currentValue) {
+                return accumulator + currentValue;
+              }, 0),
+            address: data.billing_details.address,
+          }),
+        });
         const resData = await res.json();
         if (!res.ok) {
           console.log(resData);

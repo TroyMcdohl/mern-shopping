@@ -20,14 +20,11 @@ const UserProfile = () => {
   form.append("email", email);
 
   const clickHandler = async () => {
-    const res = await fetch(
-      "https://mern-shopping-api.herokuapp.com/api/v1/users/updateme",
-      {
-        method: "PATCH",
-        credentials: "include",
-        body: form,
-      }
-    );
+    const res = await fetch("http://localhost:8000/api/v1/users/updateme", {
+      method: "PATCH",
+      credentials: "include",
+      body: form,
+    });
 
     const resData = await res.json();
 
@@ -46,7 +43,7 @@ const UserProfile = () => {
           <div className="profilePassword_form">
             <div className="profilePassword_input_box">
               <img
-                src={`https://mern-shopping-api.herokuapp.com/${currentUser.photo}`}
+                src={`http://localhost:8000/${currentUser.photo}`}
                 alt=""
                 className="profile_pic"
                 onClick={() => {

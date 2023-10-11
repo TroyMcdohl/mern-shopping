@@ -6,7 +6,9 @@ const useErrorLoadingShow = (props) => {
     <>
       {props.loading && (
         <div className="loading_box">
-          <h5 className="loading_title">Loading....</h5>
+          <h5 className="loading_title">
+            {props.loadingMsg ? props.loadingMsg : "loading..."}
+          </h5>
         </div>
       )}
       {props.error && (

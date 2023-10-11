@@ -41,7 +41,7 @@ export const HomeCard = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(
-        `https://mern-shopping-api.herokuapp.com/api/v1/products/${props.id}/cart`,
+        `http://localhost:8000/api/v1/products/${props.id}/cart`,
         {
           credentials: "include",
         }
@@ -85,7 +85,7 @@ export const HomeCard = (props) => {
         {!touch ? (
           <Link to={`/products/${props.id}`}>
             <img
-              src={`https://mern-shopping-api.herokuapp.com/${props.images[0]}`}
+              src={`http://localhost:8000/${props.images[0]}`}
               alt=""
               className="homeDisplay_card_img"
             />
@@ -93,7 +93,7 @@ export const HomeCard = (props) => {
         ) : (
           <Link to={`/products/${props.id}`}>
             <img
-              src={`https://mern-shopping-api.herokuapp.com/${props.images[1]}`}
+              src={`http://localhost:8000/${props.images[1]}`}
               alt=""
               className="homeDisplay_card_img_hover"
             />
@@ -106,45 +106,43 @@ export const HomeCard = (props) => {
               : "homeDisplay_card_caption active"
           }
           style={{ cursor: addLoading && "wait" }}
-          onClick={async () => {
-            setAddLoading(true);
-            const res = await fetch(
-              `https://mern-shopping-api.herokuapp.com/api/v1/products/${props.id}/cart`,
-              {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-type": "application/json" },
-                body: JSON.stringify({
-                  productId: props.id,
-                  productName: props.name,
-                  productImg: props.images[0],
-                  productPrice: props.price,
-                  quantity: props.quantity,
-                  total: props.price,
-                }),
-              }
-            );
+          // onClick={async () => {
+          //   setAddLoading(true);
+          //   const res = await fetch(
+          //     `http://localhost:8000/api/v1/products/${props.id}/cart`,
+          //     {
+          //       method: "POST",
+          //       credentials: "include",
+          //       headers: { "Content-type": "application/json" },
+          //       body: JSON.stringify({
+          //         productId: props.id,
+          //         productName: props.name,
+          //         productImg: props.images[0],
+          //         productPrice: props.price,
+          //         quantity: props.quantity,
+          //         total: props.price,
+          //       }),
+          //     }
+          //   );
 
-            const resData = await res.json();
+          //   const resData = await res.json();
 
-            if (res.ok) {
-              setOK(true);
-              other((prev) => !prev);
-              setAddLoading(false);
-            }
-            if (!res.ok) {
-              setAddError(true);
-              setErrMsg(resData.message);
-              setTimeout(() => {
-                setAddError(false);
-              }, 3000);
-              setAddLoading(false);
-            }
-          }}
+          //   if (res.ok) {
+          //     setOK(true);
+          //     other((prev) => !prev);
+          //     setAddLoading(false);
+          //   }
+          //   if (!res.ok) {
+          //     setAddError(true);
+          //     setErrMsg(resData.message);
+          //     setTimeout(() => {
+          //       setAddError(false);
+          //     }, 3000);
+          //     setAddLoading(false);
+          //   }
+          // }}
         >
-          {cartProduct && cartProduct.find((c) => c === props.id)
-            ? "Already Add"
-            : "Add To Cart"}
+          {props.tagName}
         </h4>
       </div>
     </>

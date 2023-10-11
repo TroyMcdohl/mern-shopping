@@ -18,9 +18,9 @@ const Products = () => {
   const url =
     changeValue && changeValue !== "all"
       ? sortValue
-        ? `https://mern-shopping-api.herokuapp.com/api/v1/products?kind=${changeValue}&&sort=${sortValue}`
-        : `https://mern-shopping-api.herokuapp.com/api/v1/products?kind=${changeValue}`
-      : `https://mern-shopping-api.herokuapp.com/api/v1/products?sort=${sortValue}`;
+        ? `http://localhost:8000/api/v1/products?kind=${changeValue}&&sort=${sortValue}`
+        : `http://localhost:8000/api/v1/products?kind=${changeValue}`
+      : `http://localhost:8000/api/v1/products?sort=${sortValue}`;
 
   const { data, loading, error, errMsg, success } = useFetchGet(
     url,
